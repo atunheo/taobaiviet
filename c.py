@@ -47,7 +47,7 @@ def export_repos_to_excel(base_dir, output_path):
 
 st.title("📂 Xuất Repo sang Excel")
 
-uploaded_file = st.file_uploader("Upload file .zip chứa các repo (baiviet.zip)", type=["zip"])
+uploaded_file = st.file_uploader("Upload file .zip ", type=["zip"])
 
 if uploaded_file is not None:
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -70,3 +70,4 @@ if uploaded_file is not None:
                 file_name="repocuoicung.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
+
