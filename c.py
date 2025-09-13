@@ -201,16 +201,14 @@ def process_excel_with_html(df):
 
 # -------------------- Streamlit UI --------------------
 
-st.title("📂 Script Hoàn Chỉnh - Xử lý Zip + HTML")
+st.title("📂 Script Hoàn Chỉnh - Zip → baiviet_processed.xlsx")
 
-# Tab 1: Xử lý file Zip
-tab1, tab2 = st.tabs(["📁 Xử lý File Zip", "📊 Xử lý File Excel"])
+st.markdown("**Chỉ cần upload file .zip, script sẽ tự động xử lý và xuất file `baiviet_processed.xlsx`**")
 
-with tab1:
-    st.header("Bước 1: Upload file .zip")
-    uploaded_zip = st.file_uploader("Chọn file .zip chứa các thư mục với README.md", type=["zip"])
-    
-    if uploaded_zip is not None:
+uploaded_zip = st.file_uploader("Upload file .zip chứa các thư mục với README.md", type=["zip"])
+
+if uploaded_zip is not None:
+    with st.spinner("Đang xử lý file zip..."):
         with tempfile.TemporaryDirectory() as tmpdir:
             zip_path = os.path.join(tmpdir, "repos.zip")
             with open(zip_path, "wb") as f:
@@ -220,78 +218,64 @@ with tab1:
             with zipfile.ZipFile(zip_path, "r") as zip_ref:
                 zip_ref.extractall(tmpdir)
 
-            # Xuất Excel
-            excel_path = os.path.join(tmpdir, "repocuoicung.xlsx")
-            df = export_repos_to_excel(tmpdir, excel_path)
+            # Bước 1: Tạo Excel từ zip
+            st.info("🔄 Bước 1: Tạo Excel từ file zip...")
+            df = export_repos_to_excel(tmpdir, os.path.join(tmpdir, "temp.xlsx"))
             
-            st.success("✅ Đã tạo Excel từ file zip!")
-            st.dataframe(df.head())
-            
-            # Download file Excel
-            with open(excel_path, "rb") as f:
-                st.download_button(
-                    label="📥 Tải file Excel",
-                    data=f,
-                    file_name="repocuoicung.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                )
-
-with tab2:
-    st.header("Bước 2: Xử lý file Excel với HTML")
-    uploaded_excel = st.file_uploader("Chọn file Excel để thêm HTML tags", type=["xlsx", "xls"])
-    
-    if uploaded_excel is not None:
-        try:
-            # Đọc file Excel
-            df = pd.read_excel(uploaded_excel)
-            st.write("**Dữ liệu gốc:**")
-            st.dataframe(df.head())
-            
-            # Xử lý với HTML
+            # Bước 2: Xử lý HTML
+            st.info("🔄 Bước 2: Thêm HTML tags và random links...")
             df_processed = process_excel_with_html(df)
             
             if df_processed is not None:
-                st.write("**Dữ liệu sau khi xử lý:**")
+                # Tạo file Excel cuối cùng
+                output_path = os.path.join(tmpdir, "baiviet_processed.xlsx")
+                df_processed.to_excel(output_path, index=False)
+                
+                st.success("✅ Hoàn thành! Đã tạo file `baiviet_processed.xlsx`")
+                
+                # Hiển thị preview
+                st.write("**Preview dữ liệu cuối cùng:**")
                 st.dataframe(df_processed.head())
                 
-                # Tạo file Excel đã xử lý
-                output_buffer = tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx')
-                df_processed.to_excel(output_buffer.name, index=False)
-                
-                with open(output_buffer.name, "rb") as f:
-                    st.success("✅ Đã xử lý xong!")
+                # Download file cuối cùng
+                with open(output_path, "rb") as f:
                     st.download_button(
-                        label="📥 Tải file Excel đã xử lý",
+                        label="📥 Tải file baiviet_processed.xlsx",
                         data=f,
                         file_name="baiviet_processed.xlsx",
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
-                
-                # Cleanup
-                os.unlink(output_buffer.name)
-                
-        except Exception as e:
-            st.error(f"Đã xảy ra lỗi: {e}")
+            else:
+                st.error("❌ Có lỗi xảy ra trong quá trình xử lý!")
 
 # Hướng dẫn sử dụng
 st.sidebar.markdown("""
 ## 📋 Hướng dẫn sử dụng
 
-### Tab 1: Xử lý File Zip
-1. Upload file .zip chứa các thư mục
-2. Mỗi thư mục phải có file README.md
-3. Script sẽ tạo Excel với 2 cột: "Tiêu đề" và "Nội dung"
-4. Tự động loại bỏ dấu # trong nội dung
-
-### Tab 2: Xử lý File Excel  
-1. Upload file Excel có ít nhất 2 cột
-2. Script sẽ thêm HTML tags và random links
-3. Cột A: Thêm link random và format HTML
-4. Cột B: Giữ nguyên + thêm link động
+### Workflow đơn giản:
+1. **Upload file .zip** chứa các thư mục
+2. **Mỗi thư mục** phải có file README.md
+3. **Script tự động:**
+   - Tạo Excel với 2 cột: "Tiêu đề" và "Nội dung"
+   - Loại bỏ dấu # trong nội dung
+   - Thêm HTML tags và random links
+   - Xuất file `baiviet_processed.xlsx`
 
 ### Tính năng:
-- ✅ Loại bỏ dấu # trong text
-- ✅ Random links từ pool có sẵn
-- ✅ Chuyển đổi markdown thành HTML
-- ✅ Thêm link động giữa các cột
+- ✅ **1-click processing** - chỉ cần upload zip
+- ✅ **Loại bỏ dấu #** trong text
+- ✅ **Random links** từ pool có sẵn
+- ✅ **Chuyển đổi markdown** thành HTML
+- ✅ **Link động** giữa các cột
+- ✅ **Preview** dữ liệu trước khi tải
+
+### Cấu trúc file zip:
+```
+your_file.zip
+├── folder1/
+│   └── README.md
+├── folder2/
+│   └── README.md
+└── ...
+```
 """)
