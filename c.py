@@ -5,14 +5,17 @@ import re
 import tempfile
 import zipfile
 
-def clean_final_repo_name(title: str) -> str:
-    if not title:
+def clean_text(text: str) -> str:
+    """Loại bỏ dấu # ở đầu dòng và làm sạch text"""
+    if not text:
         return ""
-    name = title.strip()
-    name = re.sub(r"^#+\s*", "", name)
-    if "-" in name:
-        name = name.rsplit("-", 1)[0].strip()
-    return name
+    lines = text.splitlines()
+    cleaned_lines = []
+    for line in lines:
+        # Loại bỏ dấu # ở đầu dòng
+        cleaned_line = re.sub(r"^#+\s*", "", line.strip())
+        cleaned_lines.append(cleaned_line)
+    return "\n".join(cleaned_lines)
 
 def export_repos_to_excel(base_dir, output_path):
     data = []
@@ -31,16 +34,17 @@ def export_repos_to_excel(base_dir, output_path):
         lines = content.splitlines()
         title = lines[0].strip() if lines else ""
         body = "\n".join(lines[1:]).strip() if len(lines) > 1 else ""
-        final_name = clean_final_repo_name(title)
+        
+        # Làm sạch tiêu đề và nội dung, loại bỏ dấu #
+        cleaned_title = clean_text(title)
+        cleaned_body = clean_text(body)
 
         data.append({
-            "Tên repo": repo_dir,
-            "Tiêu đề": title,
-            "Nội dung": body,
-            "Tên repo cuối cùng": final_name
+            "Tiêu đề": cleaned_title,
+            "Nội dung": cleaned_body
         })
 
-    df = pd.DataFrame(data, columns=["Tên repo", "Tiêu đề", "Nội dung", "Tên repo cuối cùng"])
+    df = pd.DataFrame(data, columns=["Tiêu đề", "Nội dung"])
     df.to_excel(output_path, index=False)
 
 # -------------------- Streamlit UI --------------------
