@@ -203,9 +203,9 @@ def process_excel_with_html(df):
 
 st.title("📂 heo con vui vẻ ")
 
-st.markdown("**heo con ú nu`**")
+st.markdown("**heo con ú nu**")
 
-uploaded_zip = st.file_uploader("Upload file .zip chứa các thư mục với README.md", type=["zip"])
+uploaded_zip = st.file_uploader("Upload file", type=["zip"])
 
 if uploaded_zip is not None:
     with st.spinner("Đang xử lý file zip..."):
@@ -279,5 +279,6 @@ your_file.zip
 └── ...
 ```
 """)
+
 
 
