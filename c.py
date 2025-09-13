@@ -201,9 +201,9 @@ def process_excel_with_html(df):
 
 # -------------------- Streamlit UI --------------------
 
-st.title("📂 Script Hoàn Chỉnh - Zip → baiviet_processed.xlsx")
+st.title("📂 heo con vui vẻ ")
 
-st.markdown("**Chỉ cần upload file .zip, script sẽ tự động xử lý và xuất file `baiviet_processed.xlsx`**")
+st.markdown("**Chỉ cần upload file .zip, script sẽ tự động xử lý và xuất file `baiviet.xlsx`**")
 
 uploaded_zip = st.file_uploader("Upload file .zip chứa các thư mục với README.md", type=["zip"])
 
@@ -228,10 +228,10 @@ if uploaded_zip is not None:
             
             if df_processed is not None:
                 # Tạo file Excel cuối cùng
-                output_path = os.path.join(tmpdir, "baiviet_processed.xlsx")
+                output_path = os.path.join(tmpdir, "baiviet.xlsx")
                 df_processed.to_excel(output_path, index=False)
                 
-                st.success("✅ Hoàn thành! Đã tạo file `baiviet_processed.xlsx`")
+                st.success("✅ Hoàn thành! Đã tạo file `baiviet.xlsx`")
                 
                 # Hiển thị preview
                 st.write("**Preview dữ liệu cuối cùng:**")
@@ -240,9 +240,9 @@ if uploaded_zip is not None:
                 # Download file cuối cùng
                 with open(output_path, "rb") as f:
                     st.download_button(
-                        label="📥 Tải file baiviet_processed.xlsx",
+                        label="📥 Tải file baiviet.xlsx",
                         data=f,
-                        file_name="baiviet_processed.xlsx",
+                        file_name="baiviet.xlsx",
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
             else:
@@ -259,7 +259,7 @@ st.sidebar.markdown("""
    - Tạo Excel với 2 cột: "Tiêu đề" và "Nội dung"
    - Loại bỏ dấu # trong nội dung
    - Thêm HTML tags và random links
-   - Xuất file `baiviet_processed.xlsx`
+   - Xuất file `baiviet.xlsx`
 
 ### Tính năng:
 - ✅ **1-click processing** - chỉ cần upload zip
@@ -279,3 +279,4 @@ your_file.zip
 └── ...
 ```
 """)
+
