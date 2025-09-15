@@ -267,4 +267,14 @@ st.sidebar.markdown(
 - ✅ **Preview** dữ liệu trước khi tải
 
 ### Cấu trúc file zip:
+```
+your_file.zip
+├── folder1/
+│   └── README.md
+├── folder2/
+│   └── README.md
+└── ...
+```
+""")
+
 
