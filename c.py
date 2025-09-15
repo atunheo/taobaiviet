@@ -191,6 +191,8 @@ def process_excel_with_html(df):
             return html_B
 
         new_b = convert_B(row)
+        # Chèn nội dung cột A vào đầu cột B
+        new_b = f"{new_a}{new_b}"
         new_b_values.append(new_b)
 
     # Cập nhật DataFrame
