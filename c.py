@@ -115,14 +115,14 @@ def create_column_A_content(original_text: str) -> str:
     anchor = f"【链接地址：<a href='https://{link}' target='_blank'>{link}</a>】"
     
     # Xử lý text gốc
-    clean_text_val = re.sub(r"【链接地址：.*?】", "", original_text).strip()
+    clean_text = re.sub(r"【链接地址：.*?】", "", original_text).strip()
     
     # Tìm dấu '-' thứ 2 và chèn anchor trước đó
-    parts = clean_text_val.split(" - ", 2)
+    parts = clean_text.split(" - ", 2)
     if len(parts) >= 3:
         clean_text_with_anchor = f"{parts[0]} - {parts[1]} {anchor} - {parts[2]}"
     else:
-        clean_text_with_anchor = f"{clean_text_val} {anchor}"
+        clean_text_with_anchor = f"{clean_text} {anchor}"
     
     # Wrap trong div với style
     return f"<div style='font-size:25px;color:pink'>{clean_text_with_anchor}</div>"
@@ -172,18 +172,22 @@ def process_excel_with_html(df):
     new_b_values = []
 
     for idx, row in df.iterrows():
+        # Random 1 link cho cả A & B
+        link = random.choice(links_pool)
+        
         # === CỘT A - Sử dụng logic từ htmls.py ===
         original_text = str(row[colA]) if pd.notnull(row[colA]) else ""
         new_a = create_column_A_content(original_text)
         new_a_values.append(new_a)
 
-        # === CỘT B - Luôn thêm 永久地址 theo link của cột A ===
+        # === CỘT B - Giữ nguyên nội dung gốc, chỉ thêm HTML tags ===
+        # Convert cột B, thay thế <p></p><p></p> bằng link động từ A
         def convert_B(row):
             url = extract_url_from_html(row[colA])
-            anchor_dynamic = f"<p><a href='{url}' target='_blank' style='font-size:30px; color:pink'>永久地址</a></p>"
+            anchor_dynamic = f"<p> <a href='{url}' target='_blank' style='font-size:30px; color:pink'>永久地址</a></p>"
             html_B = convert_cell_to_html(row[colB], is_colA=False)
-            # luôn thêm "永久地址" vào cuối nội dung cột B
-            html_B = html_B + anchor_dynamic
+            # thay thế đúng vị trí <p></p><p></p>
+            html_B = re.sub(r"<p></p>\s*<p></p>", anchor_dynamic, html_B, count=1)
             return html_B
 
         new_b = convert_B(row)
@@ -245,8 +249,7 @@ if uploaded_zip is not None:
                 st.error("❌ Có lỗi xảy ra trong quá trình xử lý!")
 
 # Hướng dẫn sử dụng
-st.sidebar.markdown(
-    """
+st.sidebar.markdown("""
 ## 📋 Hướng dẫn sử dụng
 
 ### Workflow đơn giản:
@@ -276,5 +279,6 @@ your_file.zip
 └── ...
 ```
 """)
+
 
 
