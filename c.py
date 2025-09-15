@@ -184,7 +184,7 @@ def process_excel_with_html(df):
         # Convert cột B, thay thế <p></p><p></p> bằng link động từ A
         def convert_B(row):
             url = extract_url_from_html(row[colA])
-            anchor_dynamic = f"<p> <a href='{url}' target='_blank' style='font-size:30px; color:pink'>永久地址</a></p>"
+            anchor_dynamic = f"<p> <a href='{url}' target='_blank' style='font-size:40px; color:pink'>永久地址</a></p>"
             html_B = convert_cell_to_html(row[colB], is_colA=False)
             # thay thế đúng vị trí <p></p><p></p>
             html_B = re.sub(r"<p></p>\s*<p></p>", anchor_dynamic, html_B, count=1)
