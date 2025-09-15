@@ -245,7 +245,8 @@ if uploaded_zip is not None:
                 st.error("❌ Có lỗi xảy ra trong quá trình xử lý!")
 
 # Hướng dẫn sử dụng
-st.sidebar.markdown("""
+st.sidebar.markdown(
+    """
 ## 📋 Hướng dẫn sử dụng
 
 ### Workflow đơn giản:
@@ -266,3 +267,4 @@ st.sidebar.markdown("""
 - ✅ **Preview** dữ liệu trước khi tải
 
 ### Cấu trúc file zip:
+
