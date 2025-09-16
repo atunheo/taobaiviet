@@ -112,7 +112,7 @@ def create_column_A_content(original_text: str) -> str:
     """Tạo nội dung cột A theo logic từ htmls.py"""
     # Random 1 link
     link = random.choice(links_pool)
-    anchor = f"【链接地址：<a href='https://{link}' style="color:purple;" target='_blank'>{link}</a>】"
+    anchor = f"【链接地址：<a href='https://{link}' style="color:purple" target='_blank'>{link}</a>】"
     
     # Xử lý text gốc
     clean_text = re.sub(r"【链接地址：.*?】", "", original_text).strip()
@@ -281,6 +281,7 @@ your_file.zip
 └── ...
 ```
 """)
+
 
 
 
