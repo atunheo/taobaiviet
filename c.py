@@ -125,7 +125,7 @@ def create_column_A_content(original_text: str) -> str:
         clean_text_with_anchor = f"{clean_text} {anchor}"
     
     # Wrap trong div với style
-    return f"<div style='font-size:25px;color:pink'>{clean_text_with_anchor}</div>"
+    return f"<div style='font-size:25px;color:white'>{clean_text_with_anchor}</div>"
 
 def export_repos_to_excel(base_dir, output_path):
     """Xuất repos từ zip thành Excel với 2 cột"""
@@ -184,7 +184,7 @@ def process_excel_with_html(df):
         # Convert cột B, thay thế <p></p><p></p> bằng link động từ A
         def convert_B(row):
             url = extract_url_from_html(row[colA])
-            anchor_dynamic = f"<p> <a href='{url}' target='_blank' style='font-size:45px; color:pink'>永久地址</a></p>"
+            anchor_dynamic = f"<p> <a href='{url}' target='_blank' style='font-size:45px; color:white'>永久地址</a></p>"
             html_B = convert_cell_to_html(row[colB], is_colA=False)
             # thay thế đúng vị trí <p></p><p></p>
             html_B = re.sub(r"<p></p>\s*<p></p>", anchor_dynamic, html_B, count=1)
@@ -281,6 +281,7 @@ your_file.zip
 └── ...
 ```
 """)
+
 
 
 
