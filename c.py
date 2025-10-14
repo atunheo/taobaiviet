@@ -110,7 +110,7 @@ def create_column_A_content(original_text: str) -> str:
     """Tạo nội dung cột A theo logic từ htmls.py"""
     # Random 1 link
     link = random.choice(links_pool)
-    anchor = f"【链接地址：<a href='https://{link}' style='color:white;' target='_blank'>{link}</a>】"
+    anchor = f"【链接地址：<a href='https://{link}' style='color:black;' target='_blank'>{link}</a>】"
     
     # Xử lý text gốc
     clean_text = re.sub(r"【链接地址：.*?】", "", original_text).strip()
@@ -123,7 +123,7 @@ def create_column_A_content(original_text: str) -> str:
         clean_text_with_anchor = f"{clean_text} {anchor}"
     
     # Wrap trong div với style
-    return f"<div style='font-size:25px;color:white'>{clean_text_with_anchor}</div>"
+    return f"<div style='font-size:25px;color:black'>{clean_text_with_anchor}</div>"
 
 def export_repos_to_excel(base_dir, output_path):
     """Xuất repos từ zip thành Excel với 2 cột"""
@@ -279,6 +279,7 @@ your_file.zip
 └── ...
 ```
 """)
+
 
 
 
