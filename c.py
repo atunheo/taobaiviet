@@ -9,8 +9,6 @@ import html
 
 # Danh sách link để random
 links_pool = [
-    "181.run", "182.run", "183.run",
-    "za51.run", "za52.run", "za53.run",
     "uu1.run", "uu2.run", "uu3.run"
 ]
 
@@ -281,6 +279,7 @@ your_file.zip
 └── ...
 ```
 """)
+
 
 
 
